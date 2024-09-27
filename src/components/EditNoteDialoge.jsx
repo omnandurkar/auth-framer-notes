@@ -9,6 +9,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { EditNoteAction } from '@/actions/page';
 import { Label } from './ui/label';
 import { toast } from 'sonner';
+import { Switch } from "@/components/ui/switch"
+
 // import toast from 'react-hot-toast';
 
 const EditNoteDialog = ({ open, onClose, noteData, onUpdate }) => {
@@ -33,9 +35,9 @@ const EditNoteDialog = ({ open, onClose, noteData, onUpdate }) => {
 
         try {
             await EditNoteAction(noteData._id, formData, JSON.parse(localStorage.getItem('user'))._id);
-            onUpdate(); // Notify parent component of the update
+            onUpdate(); 
             toast.success("Note updated successfully");
-            onClose(); // Close the dialog
+            onClose(); 
         } catch (error) {
             console.error("Error updating note:", error);
         }
@@ -85,40 +87,44 @@ const EditNoteDialog = ({ open, onClose, noteData, onUpdate }) => {
                             />
                         </div>
                         <div className="ms-1 flex items-center gap-2">
-                            <Checkbox
+                            <Switch
                                 id="isOpen"
                                 checked={isTagOpen}
                                 onCheckedChange={(checked) => setIsTagOpen(checked)}
                             />
                             <Label htmlFor="isOpen">Open Tag</Label>
                         </div>
-                        <div className="grid grid-cols-2 gap-5">
-                            <div className="items-center gap-4">
-                                <Label htmlFor="tagTitle" className="text-right">Tag Title</Label>
-                                <Input
-                                    id="tagTitle"
-                                    value={tagTitle}
-                                    onChange={(e) => setTagTitle(e.target.value)}
-                                    className="col-span-3"
-                                    placeholder="Tag Title"
-                                />
-                            </div>
-                            <div className="items-center gap-4">
-                                <Label htmlFor="tagColor" className="text-right">Tag Color</Label>
-                                <select
-                                    id="tagColor"
-                                    value={tagColor}
-                                    onChange={(e) => setTagColor(e.target.value)}
-                                    className="col-span-3 border rounded-md p-2"
-                                >
-                                    <option value="" disabled>Select Tag Color</option>
-                                    <option value="green">Green</option>
-                                    <option value="blue">Blue</option>
-                                    <option value="yellow">Yellow</option>
-                                    <option value="red">Red</option>
-                                </select>
-                            </div>
-                        </div>
+                        {
+                            isTagOpen && (
+                                <div className="grid grid-cols-2 gap-5">
+                                    <div className="items-center gap-4">
+                                        <Label htmlFor="tagTitle" className="text-right">Tag Title</Label>
+                                        <Input
+                                            id="tagTitle"
+                                            value={tagTitle}
+                                            onChange={(e) => setTagTitle(e.target.value)}
+                                            className="col-span-3"
+                                            placeholder="Tag Title"
+                                        />
+                                    </div>
+                                    <div className="items-center gap-4">
+                                        <Label htmlFor="tagColor" className="text-right">Tag Color</Label>
+                                        <select
+                                            id="tagColor"
+                                            value={tagColor}
+                                            onChange={(e) => setTagColor(e.target.value)}
+                                            className="col-span-3 border text-sm rounded-md p-2"
+                                        >
+                                            <option value="" disabled>Select Tag Color</option>
+                                            <option value="green">Green</option>
+                                            <option value="blue">Blue</option>
+                                            <option value="yellow">Yellow</option>
+                                            <option value="red">Red</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            )
+                        }
                     </div>
                     <DialogFooter>
                         <Button onClick={onClose} variant="outline">Cancel</Button>

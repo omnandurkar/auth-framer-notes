@@ -14,7 +14,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
+// import { Checkbox } from "@/components/ui/checkbox";
+import { Switch } from "@/components/ui/switch"
+import { toast } from "sonner";
+
 
 const AddNote = ({ onNoteAdded }) => {
     const [title, setTitle] = useState("");
@@ -22,11 +25,13 @@ const AddNote = ({ onNoteAdded }) => {
     const [tagTitle, setTagTitle] = useState("");
     const [tagColor, setTagColor] = useState("");
     const [link, setLink] = useState("");
-    const [isOpen, setIsOpen] = useState(false);
+    // const [isOpen, setIsOpen] = useState(false);
+    const [isTagOpen, setIsTagOpen] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
+
     const handleSubmit = async (e) => {
-        e.preventDefault();  // Prevent default form submission behavior.
+        e.preventDefault();  
 
         const user = JSON.parse(localStorage.getItem('user'));
         const userId = user?._id;
@@ -36,13 +41,24 @@ const AddNote = ({ onNoteAdded }) => {
             return;
         }
 
+        if (!title) {
+            toast.error("Title is required!");
+            return;
+        }
+
+        if (!desc) {
+            toast.error("Description is required!");
+            return;
+        }
+
+
         const noteData = {
             title,
             desc,
             tagTitle,
             tagColor,
             link,
-            isOpen,
+            isOpen: isTagOpen,
             user: userId,
         };
 
@@ -50,9 +66,9 @@ const AddNote = ({ onNoteAdded }) => {
         try {
             await AddNoteAction(noteData);
             onNoteAdded();
-            // Notify parent component to refresh notes.
-            console.log(noteData);
-            // Clear form inputs after successful submission
+            
+            // console.log(noteData);
+            
             setTitle("");
             setDesc("");
             setTagTitle("");
@@ -108,34 +124,45 @@ const AddNote = ({ onNoteAdded }) => {
                                     placeholder="Add a link (optional)"
                                 />
                             </div>
-                            <div className="flex gap-4">
-                                <div>
-                                    <Label htmlFor="tagTitle">Tag</Label>
-                                    <Input
-                                        id="tagTitle"
-                                        value={tagTitle}
-                                        onChange={(e) => setTagTitle(e.target.value)}
-                                        placeholder="Tag Title"
-                                    />
-                                </div>
-                                <div>
-                                    <Label htmlFor="tagColor">Tag Color</Label>
-                                    <Input
-                                        id="tagColor"
-                                        value={tagColor}
-                                        onChange={(e) => setTagColor(e.target.value)}
-                                        placeholder="Color"
-                                    />
-                                </div>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                                <Checkbox
+                            <div className="ms-1 flex items-center gap-2">
+                                <Switch
                                     id="isOpen"
-                                    checked={isOpen}
-                                    onCheckedChange={(checked) => setIsOpen(checked)}
+                                    checked={isTagOpen}
+                                    onCheckedChange={(checked) => setIsTagOpen(checked)}
                                 />
-                                <Label htmlFor="isOpen">Is this note public?</Label>
+                                <Label htmlFor="isOpen">Open Tag</Label>
                             </div>
+                            {
+                                isTagOpen && (
+                                    <div className="grid grid-cols-2 gap-5">
+                                        <div className="items-center gap-4">
+                                            <Label htmlFor="tagTitle" className="text-right">Tag Title</Label>
+                                            <Input
+                                                id="tagTitle"
+                                                value={tagTitle}
+                                                onChange={(e) => setTagTitle(e.target.value)}
+                                                className="col-span-3"
+                                                placeholder="Tag Title"
+                                            />
+                                        </div>
+                                        <div className="items-center gap-4">
+                                            <Label htmlFor="tagColor" className="text-right">Tag Color</Label>
+                                            <select
+                                                id="tagColor"
+                                                value={tagColor}
+                                                onChange={(e) => setTagColor(e.target.value)}
+                                                className="col-span-3 border text-sm rounded-md p-2"
+                                            >
+                                                <option value="" disabled>Select Tag Color</option>
+                                                <option value="green">Green</option>
+                                                <option value="blue">Blue</option>
+                                                <option value="yellow">Yellow</option>
+                                                <option value="red">Red</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                )
+                            }
                         </div>
                         <DialogFooter>
                             <Button onClick={handleSubmit} type="submit">Save Note</Button>
