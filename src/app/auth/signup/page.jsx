@@ -65,7 +65,7 @@ const SignUpForm = () => {
                     <img src='https://autuswealth.co.uk/wp-content/uploads/2024/05/undraw_team_up_re_84ok-1-2022x2048.png' alt='logo' className='w-96 h-96' />
                 </div>
                 <Link href="/" >
-                    <h1 className='text-6xl font-bold'>Notes</h1>
+                    <h1 className='text-6xl font-bold'> LinkShift Notes</h1>
                 </Link>
             </div>
 
