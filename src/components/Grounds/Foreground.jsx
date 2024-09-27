@@ -37,7 +37,6 @@ const Foreground = () => {
                 }
 
                 const fetchedNotes = await FetchNoteAction(userId); // Fetch notes for the user
-                // console.log("Fetched notes in useEffect:", fetchedNotes); // Debugging
                 setNotes(fetchedNotes);
             } catch (error) {
                 console.error('Failed to fetch notes:', error);
@@ -47,7 +46,6 @@ const Foreground = () => {
         };
         fetchNotes();
     }, [router]);
-
 
     const handleDeleteNote = (id) => {
         setNotes((prevNotes) => prevNotes.filter((note) => note._id !== id));
@@ -83,17 +81,17 @@ const Foreground = () => {
     };
 
     return (
-        <div ref={ref} className='fixed pt-36 md:pt-52 inset-0 md:overflow-hidden overflow-auto p-10 md:px-20 top-0 left-0 w-full h-full z-[3]'>
+        <div className='fixed pt-36 md:pt-52 inset-0 md:overflow-hidden overflow-auto p-10 md:px-20 top-0 left-0 w-full h-full z-[3]'>
 
-            <div className='mt-10 relative'>
+            <div ref={ref} className='mt-10 relative'>
                 {notesIsLoading ? (
-                    <div ref={scrollContainerRef} className='flex flex-col py-10 md:flex-row gap-10 justify-center overflow-x-auto scrollbar-hide'>
+                    <div ref={scrollContainerRef} className='flex py-10 gap-10 justify-center overflow-x-auto scrollbar-hide'>
                         {[...Array(5)].map((_, index) => (
                             <div key={index} className='w-60 h-72 rounded-xl bg-neutral-300/50 animate-pulse'></div>
                         ))}
                     </div>
                 ) : (
-                    <div ref={scrollContainerRef} className='flex flex-col py-10 md:flex-row gap-10 justify-center items-center overflow-y-hidden flex-wrap overflow-x-auto scrollbar-hide'>
+                    <div ref={scrollContainerRef} className='flex py-10 gap-10 flex-col md:flex-row justify-start items-center overflow-x-auto scrollbar-hide'>
                         {notes && notes.length > 0 ? notes.map((note) => (
                             <Card
                                 key={note._id}
@@ -103,14 +101,6 @@ const Foreground = () => {
                                 onUpdate={handleUpdateNotes}
                             />
                         )) : (
-                            // <div className='relative'>
-                            //     <div className='text-center text-lg font-bold fixed top-52 left-1/2 transform -translate-x-[50%] text-neutral-900'>
-                            //         No notes found
-                            //     </div>
-                            //     <div className='fixed top-64 left-1/2 transform -translate-x-[50%] text-neutral-100'>
-                            //         <AddNote onNoteAdded={handleUpdateNotes} />
-                            //     </div>
-                            // </div>
                             <div className=' w-full flex flex-col  h-96 justify-center space-y-7 items-center' >
                                 <h1 className='text-lg font-bold text-gray-600'>No Notes Found</h1>
                                 <AddNote onNoteAdded={handleUpdateNotes} />
@@ -120,9 +110,8 @@ const Foreground = () => {
                 )}
             </div>
 
-            {notes.length > 0 &&
-
-                <div className='hidden md:flex w-full justify-between py-10 pe-3'>
+            {notes.length > 0 && (
+                <div className='hidden md:flex w-full justify-between py-10'>
                     <button onClick={scrollLeft} className='text-black p-2 rounded-full'>
                         <ArrowLeftCircleIcon />
                     </button>
@@ -130,17 +119,12 @@ const Foreground = () => {
                         <ArrowRightCircle />
                     </button>
                 </div>
-            }
-
-
+            )}
 
             <div className="absolute top-5 right-5 md:space-y-2 flex md:flex-col justify-between space-x-24 md:space-x-0 ">
                 {notes.length > 0 && <AddNote onNoteAdded={handleUpdateNotes} />}
-                {/* <Button onClick={() => setisLogOutDialogOpen(true)}>LogOut</Button> */}
                 <Button onClick={() => setisLogOutDialogOpen(true)}> Log <Power className='text-red-400' size={15} />ut</Button>
             </div>
-
-
 
             <Dialog open={isLogOutDialogOpen} onOpenChange={() => setisLogOutDialogOpen(false)} >
                 <DialogContent className="max-w-xs">
@@ -159,4 +143,3 @@ const Foreground = () => {
 };
 
 export default Foreground;
-

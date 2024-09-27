@@ -48,12 +48,12 @@ const Card = ({ data, reference, onDelete, onUpdate }) => {
     return (
         <>
             <motion.div
-                // drag
-                // dragConstraints={reference}
-                // whileDrag={{ scale: 1.1 }}
-                // dragElastic={0.2}
-                // dragTransition={{ bounceStiffness: 500, bounceDamping: 10 }}
-                className='flex-shrink-0 relative w-60 h-72 rounded-xl bg-zinc-200  md:bg-zinc-200/80 text-zinc-800 px-8 py-10 overflow-hidden'
+                drag
+                dragConstraints={reference}
+                whileDrag={{ scale: 1.1, border: '2px solid  rgb(228 228 231)'  }}
+                dragElastic={0.2}
+                dragTransition={{ bounceStiffness: 500, bounceDamping: 10 }}
+                className='flex-shrink-0 relative w-60 h-72 rounded-xl bg-zinc-200 shadow-md  md:bg-zinc-200/80 text-zinc-800 px-8 py-10 overflow-hidden'
             >
                 <div className='flex justify-between'>
                     <FaRegFileAlt />
