@@ -48,7 +48,7 @@ const LoginPage = () => {
 
 
   return (
-    <div className="flex h-screen">
+    <div className="flex flex-col md:flex-row bg-gray-100  h-screen">
 
       <div className="hidden lg:flex flex-col space-y-10 items-center justify-center flex-1 bg-white text-black">
         <div className="max-w-md text-center">
@@ -60,11 +60,16 @@ const LoginPage = () => {
       </div>
 
 
+      <Link href="/" >
+        <h1 className='text-5xl md:hidden text-center py-16 font-bold'>LinkShift Notes</h1>
+      </Link>
+
+
       <Toaster />
 
       <div className=" bg-gray-100 md:w-1/2 w-full flex flex-col  items-center justify-center">
 
-        <div className=' flex flex-col border-2 w-10/12 md:w-1/2 p-2 py-7 rounded-xl shadow-xl justify-center items-center'>
+        <div className=' flex flex-col border-2 w-10/12 md:w-1/2 bg-white p-2 py-7 rounded-xl shadow-xl justify-center items-center'>
           <h2 className='font-bold text-lg md:text-xl'>Sign In to  Notes </h2>
           <p className='text-xs text-neutral-500 font-medium'>Welcome back! Please sign in to continue</p>
 

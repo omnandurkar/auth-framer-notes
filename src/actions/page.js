@@ -12,16 +12,20 @@ export const AddNoteAction = async (noteData) => {
     'use server';
     await connectDB();
 
+    const tag = {
+        isOpen: noteData.isOpen,  // Directly access noteData properties
+        tagTitle: noteData.tagTitle,
+        tagColor: noteData.tagColor,
+    };
+
     try {
         // console.log("Note data received on server:", noteData);  
 
         const note = new Notes({
             title: noteData.title,
             desc: noteData.desc,
-            tagTitle: noteData.tagTitle,
-            tagColor: noteData.tagColor,
             link: noteData.link,
-            isOpen: noteData.isOpen,
+            tag,
             user: noteData.user,
         });
 

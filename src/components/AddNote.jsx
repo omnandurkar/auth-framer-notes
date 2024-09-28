@@ -66,6 +66,7 @@ const AddNote = ({ onNoteAdded }) => {
         try {
             await AddNoteAction(noteData);
             onNoteAdded();
+            toast.success("Note added successfully!");
             
             // console.log(noteData);
             
