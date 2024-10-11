@@ -8,7 +8,7 @@ import crypto from 'crypto';
 
 // Encryption settings
 const algorithm = 'aes-256-ctr';
-const secretKey = process.env.NEXT_PUBLIC_SECRET_KEY;
+const secretKey = process.env.SECRET_KEY;
 
 // Encryption function
 const encrypt = (text) => {
