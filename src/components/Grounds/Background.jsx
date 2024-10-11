@@ -34,7 +34,7 @@ const Background = () => {
             {/* at the bottom of the screen at the center */}
             <div className='absolute bottom-[2%] w-full'>
                 <h2 className='text-center text-zinc-800 opacity-50 text-sm font-semibold'>
-                    Made with ❤️ by Om Nandurkar
+                    Made with ❤️ by Om M Nandurkar
                 </h2>
             </div>
         </div>

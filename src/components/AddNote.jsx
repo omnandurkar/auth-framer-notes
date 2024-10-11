@@ -14,10 +14,17 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-// import { Checkbox } from "@/components/ui/checkbox";
-import { Switch } from "@/components/ui/switch"
+import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 
+const colorOptions = [
+    { value: "red", label: "Red" },
+    { value: "purple", label: "Purple" },
+    { value: "blue", label: "Blue" },
+    { value: "green", label: "Green" },
+    { value: "yellow", label: "Yellow" }
+    // { value: "black", label: "Black" },
+];
 
 const AddNote = ({ onNoteAdded }) => {
     const [title, setTitle] = useState("");
@@ -25,13 +32,12 @@ const AddNote = ({ onNoteAdded }) => {
     const [tagTitle, setTagTitle] = useState("");
     const [tagColor, setTagColor] = useState("");
     const [link, setLink] = useState("");
-    // const [isOpen, setIsOpen] = useState(false);
-    const [isTagOpen, setIsTagOpen] = useState(false);
+    const [isTagOpen, setIsTagOpen] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
-
+    const [loading, setLoading] = useState(false);
 
     const handleSubmit = async (e) => {
-        e.preventDefault();  
+        e.preventDefault();
 
         const user = JSON.parse(localStorage.getItem('user'));
         const userId = user?._id;
@@ -51,7 +57,6 @@ const AddNote = ({ onNoteAdded }) => {
             return;
         }
 
-
         const noteData = {
             title,
             desc,
@@ -62,23 +67,22 @@ const AddNote = ({ onNoteAdded }) => {
             user: userId,
         };
 
-
         try {
+            setLoading(true);
             await AddNoteAction(noteData);
             onNoteAdded();
             toast.success("Note added successfully!");
-            
-            // console.log(noteData);
-            
             setTitle("");
             setDesc("");
             setTagTitle("");
             setTagColor("");
             setLink("");
-            setIsOpen(false);
+            setIsTagOpen(true);
             setIsModalOpen(false);
         } catch (error) {
             console.error("Error saving note:", error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -125,7 +129,43 @@ const AddNote = ({ onNoteAdded }) => {
                                     placeholder="Add a link (optional)"
                                 />
                             </div>
-                            <div className="ms-1 flex items-center gap-2">
+                            {/* <div className="ms-1 flex items-center gap-2">
+                                <Switch
+                                    id="isOpen"
+                                    checked={isTagOpen}
+                                    onCheckedChange={(checked) => setIsTagOpen(checked)}
+                                />
+                                <Label htmlFor="isOpen">Open Tag</Label>
+                            </div> */}
+                            {isTagOpen && (
+                                <div className="grid grid-cols-2 gap-5">
+                                    <div className="items-center gap-4">
+                                        <Label htmlFor="tagTitle" className="text-right">Tag Title</Label>
+                                        <Input
+                                            id="tagTitle"
+                                            value={tagTitle}
+                                            onChange={(e) => setTagTitle(e.target.value)}
+                                            className="col-span-3"
+                                            placeholder="Tag Title"
+                                        />
+                                    </div>
+                                    <div className="flex-col items-center ">
+                                        <Label className="text-right">Tag Color</Label>
+                                        <div className="flex  space-x-3 py-2">
+                                            {colorOptions.map((color) => (
+                                                <div
+                                                    key={color.value}
+                                                    onClick={() => setTagColor(color.value)}
+                                                    className={`h-6 w-6 rounded-sm cursor-pointer border-2 border-transparent ${tagColor === color.value ? 'ring-1 ring-black  drop-shadow-md' : ''}`}
+                                                    style={{ backgroundColor: color.value }}
+                                                />
+                                            ))}
+
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                            <div className="ms-1 hidden  items-center gap-2">
                                 <Switch
                                     id="isOpen"
                                     checked={isTagOpen}
@@ -133,40 +173,11 @@ const AddNote = ({ onNoteAdded }) => {
                                 />
                                 <Label htmlFor="isOpen">Open Tag</Label>
                             </div>
-                            {
-                                isTagOpen && (
-                                    <div className="grid grid-cols-2 gap-5">
-                                        <div className="items-center gap-4">
-                                            <Label htmlFor="tagTitle" className="text-right">Tag Title</Label>
-                                            <Input
-                                                id="tagTitle"
-                                                value={tagTitle}
-                                                onChange={(e) => setTagTitle(e.target.value)}
-                                                className="col-span-3"
-                                                placeholder="Tag Title"
-                                            />
-                                        </div>
-                                        <div className="items-center gap-4">
-                                            <Label htmlFor="tagColor" className="text-right">Tag Color</Label>
-                                            <select
-                                                id="tagColor"
-                                                value={tagColor}
-                                                onChange={(e) => setTagColor(e.target.value)}
-                                                className="col-span-3 border text-sm rounded-md p-2"
-                                            >
-                                                <option value="" disabled>Select Tag Color</option>
-                                                <option value="green">Green</option>
-                                                <option value="blue">Blue</option>
-                                                <option value="yellow">Yellow</option>
-                                                <option value="red">Red</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                )
-                            }
                         </div>
                         <DialogFooter>
-                            <Button onClick={handleSubmit} type="submit">Save Note</Button>
+                            <Button onClick={handleSubmit} type="submit" disabled={loading}>
+                                {loading ? `Saving...` : `Save Note`}
+                            </Button>
                         </DialogFooter>
                     </DialogContent>
                 </form>

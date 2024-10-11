@@ -13,6 +13,15 @@ import { Switch } from "@/components/ui/switch"
 
 // import toast from 'react-hot-toast';
 
+const colorOptions = [
+    { value: "red", label: "Red" },
+    { value: "purple", label: "Purple" },
+    { value: "blue", label: "Blue" },
+    { value: "green", label: "Green" },
+    { value: "yellow", label: "Yellow" }
+    // { value: "black", label: "Black" },
+];
+
 const EditNoteDialog = ({ open, onClose, noteData, onUpdate }) => {
     const [title, setTitle] = useState(noteData.title);
     const [desc, setDesc] = useState(noteData.desc);
@@ -20,6 +29,7 @@ const EditNoteDialog = ({ open, onClose, noteData, onUpdate }) => {
     const [tagTitle, setTagTitle] = useState(noteData.tag.tagTitle);
     const [tagColor, setTagColor] = useState(noteData.tag.tagColor);
     const [isTagOpen, setIsTagOpen] = useState(noteData.tag.isOpen);
+    const [loading, setLoading] = useState(false);
 
     const handleEditSubmit = async (e) => {
         e.preventDefault();
@@ -34,12 +44,15 @@ const EditNoteDialog = ({ open, onClose, noteData, onUpdate }) => {
         };
 
         try {
+            setLoading(true);
             await EditNoteAction(noteData._id, formData, JSON.parse(localStorage.getItem('user'))._id);
-            onUpdate(); 
+            onUpdate();
             toast.success("Note updated successfully");
-            onClose(); 
+            onClose();
         } catch (error) {
             console.error("Error updating note:", error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -86,7 +99,7 @@ const EditNoteDialog = ({ open, onClose, noteData, onUpdate }) => {
                                 placeholder="Note Link"
                             />
                         </div>
-                        <div className="ms-1 flex items-center gap-2">
+                        <div className="ms-1 hidden items-center gap-2">
                             <Switch
                                 id="isOpen"
                                 checked={isTagOpen}
@@ -107,7 +120,7 @@ const EditNoteDialog = ({ open, onClose, noteData, onUpdate }) => {
                                             placeholder="Tag Title"
                                         />
                                     </div>
-                                    <div className="items-center gap-4">
+                                    {/* <div className="items-center gap-4">
                                         <Label htmlFor="tagColor" className="text-right">Tag Color</Label>
                                         <select
                                             id="tagColor"
@@ -121,6 +134,21 @@ const EditNoteDialog = ({ open, onClose, noteData, onUpdate }) => {
                                             <option value="yellow">Yellow</option>
                                             <option value="red">Red</option>
                                         </select>
+                                    </div> */}
+
+                                    <div className="flex-col items-center ">
+                                        <Label className="text-right">Tag Color</Label>
+                                        <div className="flex  space-x-3 py-2">
+                                            {colorOptions.map((color) => (
+                                                <div
+                                                    key={color.value}
+                                                    onClick={() => setTagColor(color.value)}
+                                                    className={`h-6 w-6 rounded-sm cursor-pointer border-2 border-transparent ${tagColor === color.value ? 'ring-1 ring-black  drop-shadow-md' : ''}`}
+                                                    style={{ backgroundColor: color.value }}
+                                                />
+                                            ))}
+
+                                        </div>
                                     </div>
                                 </div>
                             )
@@ -128,7 +156,9 @@ const EditNoteDialog = ({ open, onClose, noteData, onUpdate }) => {
                     </div>
                     <DialogFooter>
                         <Button onClick={onClose} variant="outline">Cancel</Button>
-                        <Button type="submit">Save Changes</Button>
+                        <Button className="mb-3 md:mb-0" type="submit" disabled={loading} >
+                            {loading ? `Saving...` : `Save Changes`}
+                        </Button>
                     </DialogFooter>
                 </form>
             </DialogContent>

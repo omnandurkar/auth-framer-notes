@@ -14,6 +14,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
+import toast from 'react-hot-toast';
 
 const Foreground = () => {
     const ref = useRef(null);
@@ -32,11 +33,11 @@ const Foreground = () => {
                 const userId = user?._id;
 
                 if (!userId) {
-                    router.push('/auth/login'); // Redirect to login if not authenticated
+                    router.push('/auth/login');
                     return;
                 }
 
-                const fetchedNotes = await FetchNoteAction(userId); // Fetch notes for the user
+                const fetchedNotes = await FetchNoteAction(userId);
                 setNotes(fetchedNotes);
             } catch (error) {
                 console.error('Failed to fetch notes:', error);
@@ -65,7 +66,9 @@ const Foreground = () => {
 
     const handleLogout = () => {
         localStorage.removeItem('user');
-        router.push('/auth/login'); // Redirect to login after logout
+        toast.success('Logged out successfully');
+        router.push('/auth/login');
+
     };
 
     const scrollLeft = () => {
@@ -85,9 +88,9 @@ const Foreground = () => {
 
             <div ref={ref} className='mt-10 relative'>
                 {notesIsLoading ? (
-                    <div ref={scrollContainerRef} className='flex py-10 gap-10 justify-center overflow-x-auto scrollbar-hide'>
+                    <div ref={scrollContainerRef} className='flex max-lg:flex-col max-lg:mx-auto py-10 gap-10 justify-center overflow-x-auto scrollbar-hide'>
                         {[...Array(5)].map((_, index) => (
-                            <div key={index} className='w-60 h-72 rounded-xl bg-neutral-300/50 animate-pulse'></div>
+                            <div key={index} className='w-60 h-72  max-lg:mx-auto rounded-xl bg-neutral-300/50 animate-pulse'></div>
                         ))}
                     </div>
                 ) : (
@@ -121,9 +124,9 @@ const Foreground = () => {
                 </div>
             )}
 
-            <div className="absolute top-5 right-5 md:space-y-2 flex md:flex-col justify-between space-x-24 md:space-x-0 ">
+            <div className="absolute top-5 right-5  md:space-x-5 flex  justify-between space-x-24  ">
                 {notes.length > 0 && <AddNote onNoteAdded={handleUpdateNotes} />}
-                <Button onClick={() => setisLogOutDialogOpen(true)}> Log <Power className='text-red-400' size={15} />ut</Button>
+                <Button onClick={() => setisLogOutDialogOpen(true)}> LogOut</Button>
             </div>
 
             <Dialog open={isLogOutDialogOpen} onOpenChange={() => setisLogOutDialogOpen(false)} >

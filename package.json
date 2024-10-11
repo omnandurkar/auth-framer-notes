@@ -1,5 +1,5 @@
 {
-  "name": "next-framer-notes",
+  "name": "link-shift-notes",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -19,6 +19,7 @@
     "bcryptjs": "^2.4.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "crypto": "^1.0.1",
     "framer-motion": "^11.3.31",
     "lucide-react": "^0.437.0",
     "mongoose": "^8.6.0",
